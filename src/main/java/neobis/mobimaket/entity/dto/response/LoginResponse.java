@@ -9,4 +9,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LoginResponse {
+    String token;
+    String refreshToken;
+    String authorities;
+    String username;
 }

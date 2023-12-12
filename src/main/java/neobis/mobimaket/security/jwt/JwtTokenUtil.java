@@ -16,7 +16,8 @@ import java.util.function.Function;
 public class JwtTokenUtil {
     @Value("${jwt.secret}")
     private String jwtSecret;
-    private final Long JWT_TOKEN_VALIDITY = 24 * 7 * 60 * 60 * 1000L; //ONE WEEK
+    private final Long JWT_TOKEN_VALIDITY = 360000L; //6 min
+    private final Long REFRESH_TOKEN_VALIDITY = 360000 * 100L; //6 hours
 
     public String createToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
@@ -28,9 +29,24 @@ public class JwtTokenUtil {
                 .compact();
     }
 
+    public String createRefreshToken(Map<String, Object> claims, String subject) {
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(subject)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALIDITY))
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
+    }
+
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, userDetails.getUsername());
+    }
+
+    public String generateRefreshToken(UserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+        return createRefreshToken(claims, userDetails.getUsername());
     }
 
     public Date getExpirationDateToken(String token) {

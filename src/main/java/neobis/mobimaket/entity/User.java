@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import neobis.mobimaket.entity.enums.Role;
+import neobis.mobimaket.entity.enums.UserState;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,6 +34,8 @@ public class User implements UserDetails {
     String password;
     @Embedded
     UserInfo userInfo;
+    @Enumerated(EnumType.STRING)
+    UserState state;
     String token;
     LocalDateTime tokenExpiration;
     LocalDate birthDay;
