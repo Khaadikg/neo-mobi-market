@@ -29,9 +29,9 @@ public class MainHandler {
     }
 
     @ExceptionHandler(IncorrectCodeException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     public ExceptionResponse incorrectCodeException(IncorrectCodeException e) {
-        return new ExceptionResponse(HttpStatus.BAD_REQUEST, e.getClass().getName(), e.getMessage());
+        return new ExceptionResponse(HttpStatus.NOT_ACCEPTABLE, e.getClass().getName(), e.getMessage());
     }
 
     @ExceptionHandler(TokenExpiredException.class)

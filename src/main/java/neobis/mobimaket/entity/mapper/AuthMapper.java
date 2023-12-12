@@ -21,7 +21,7 @@ public class AuthMapper {
                 .email(request.getEmail())
                 .username(request.getUsername())
                 .role(Role.USER)
-                .state(UserState.DISABLED)
+                .state(UserState.EMPTY)
                 .build();
     }
 }
