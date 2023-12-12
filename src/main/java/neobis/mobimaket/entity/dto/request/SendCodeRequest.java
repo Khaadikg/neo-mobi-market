@@ -1,6 +1,5 @@
 package neobis.mobimaket.entity.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -9,10 +8,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class LoginRequest {
-    @NotBlank
+public class SendCodeRequest {
     String username;
-    @NotBlank
-    String password;
-
+    String phone;
 }

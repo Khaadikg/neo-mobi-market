@@ -1,9 +1,6 @@
 package neobis.mobimaket.exception.handler;
 
-import neobis.mobimaket.exception.IncorrectLoginException;
-import neobis.mobimaket.exception.NotFoundException;
-import neobis.mobimaket.exception.RegistrationTokenExpiredException;
-import neobis.mobimaket.exception.UserAlreadyExistException;
+import neobis.mobimaket.exception.*;
 import jakarta.validation.ConstraintViolationException;
 import neobis.mobimaket.exception.reponse.ExceptionResponse;
 import org.springframework.http.HttpStatus;
@@ -31,9 +28,15 @@ public class MainHandler {
         return new ExceptionResponse(HttpStatus.BAD_REQUEST, e.getClass().getName(), e.getMessage());
     }
 
-    @ExceptionHandler(RegistrationTokenExpiredException.class)
+    @ExceptionHandler(IncorrectCodeException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionResponse registrationTokenExpiredException(RegistrationTokenExpiredException e) {
+    public ExceptionResponse incorrectCodeException(IncorrectCodeException e) {
+        return new ExceptionResponse(HttpStatus.BAD_REQUEST, e.getClass().getName(), e.getMessage());
+    }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse registrationTokenExpiredException(TokenExpiredException e) {
         return new ExceptionResponse(HttpStatus.BAD_REQUEST, e.getClass().getName(), e.getMessage());
     }
 
