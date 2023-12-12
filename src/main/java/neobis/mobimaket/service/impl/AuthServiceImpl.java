@@ -74,8 +74,8 @@ public class AuthServiceImpl implements AuthService {
         user.setToken(token);
         user.setTokenExpiration(LocalDateTime.now().plusMinutes(5));
         userRepository.save(user);
-//        return String.valueOf(token);
-        return smsSender.sendSms(request, String.valueOf(token));
+        return String.valueOf(token);
+//        return smsSender.sendSms(request, String.valueOf(token));
     }
 
     @Override
