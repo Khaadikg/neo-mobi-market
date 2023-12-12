@@ -9,4 +9,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductResponse {
+    String name;
+    String shortDescription;
+    String fullDescription;
+    Double price;
 }

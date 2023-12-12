@@ -32,11 +32,13 @@ public class User implements UserDetails {
     @Column(unique = true)
     String username;
     String password;
+    String email;
+    String profilePhoto;
     @Embedded
     UserInfo userInfo;
     @Enumerated(EnumType.STRING)
     UserState state;
-    String token;
+    Integer token;
     LocalDateTime tokenExpiration;
     LocalDate birthDay;
 
