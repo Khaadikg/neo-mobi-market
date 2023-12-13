@@ -20,6 +20,7 @@ public class Product {
     String fullDescription;
     Double price;
     String photo;
+    Integer likes;
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH, CascadeType.MERGE})
     @JoinColumn(name = "owner_id")
     User owner;

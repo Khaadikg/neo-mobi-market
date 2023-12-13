@@ -12,19 +12,19 @@ import lombok.experimental.FieldDefaults;
 import neobis.mobimaket.entity.dto.request.SendCodeRequest;
 import neobis.mobimaket.exception.reponse.ExceptionResponse;
 import neobis.mobimaket.service.UserService;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequestMapping("api/user")
 public class UserController {
     UserService userService;
 
     @PutMapping("/phone-confirm")
-    @Operation(summary = "Phone confirmation", description = "Add number for user account by 4 digit code sent by SMS, if token EXPIRED deletes old token",
+    @PreAuthorize("hasAuthority('USER')")
+    @Operation(summary = "Phone confirmation", description = "Add number for SAVED user account by 4 digit code sent by SMS, if token EXPIRED deletes old token",
             responses = {
                     @ApiResponse(
                             content = @Content(mediaType = "string"),
@@ -46,6 +46,7 @@ public class UserController {
     }
 
     @PutMapping("/send-code")
+    @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "Registration send code", description = "Sends new code, user must be already saved via sign-up",
             responses = {
                     @ApiResponse(

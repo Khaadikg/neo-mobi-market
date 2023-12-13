@@ -66,11 +66,10 @@ public class AuthController {
     }
 
     @GetMapping("/refresh-token")
-    @Operation(summary = "Login", description = "Gets new token by using refresh-token if old one is expired",
+    @Operation(summary = "Get new token", description = "Gets new token by using refresh-token if old one is expired",
             responses = {
                     @ApiResponse(
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = LoginResponse.class)),
+                            content = @Content(mediaType = "string"),
                             responseCode = "200", description = "Good"),
                     @ApiResponse(
                             content = @Content(mediaType = "application/json",

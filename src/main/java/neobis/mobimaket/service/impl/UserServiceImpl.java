@@ -3,15 +3,20 @@ package neobis.mobimaket.service.impl;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import neobis.mobimaket.entity.Product;
 import neobis.mobimaket.entity.User;
 import neobis.mobimaket.entity.dto.request.SendCodeRequest;
 import neobis.mobimaket.entity.dto.request.UserRequest;
 import neobis.mobimaket.entity.dto.response.ProductResponse;
+import neobis.mobimaket.entity.dto.response.ProductShortResponse;
+import neobis.mobimaket.entity.mapper.ProductMapper;
 import neobis.mobimaket.exception.IncorrectCodeException;
 import neobis.mobimaket.exception.NotFoundException;
 import neobis.mobimaket.exception.TokenExpiredException;
+import neobis.mobimaket.repository.ProductRepository;
 import neobis.mobimaket.repository.UserRepository;
 import neobis.mobimaket.service.UserService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,6 +28,7 @@ import java.util.Random;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserServiceImpl implements UserService {
     UserRepository userRepository;
+    ProductRepository productRepository;
     @Override
     public String updateProfile(UserRequest request) {
         return null;
@@ -34,18 +40,38 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<ProductResponse> getAllMyProducts() {
-        return null;
+    public List<ProductShortResponse> getAllMyProducts() {
+        return getAuthUser().getMyProducts().stream().map(ProductMapper::mapProductToProductShortResponse).toList();
     }
 
     @Override
-    public List<ProductResponse> getAllMyLikedProducts() {
-        return null;
+    public List<ProductShortResponse> getAllMyLikedProducts() {
+        return getAuthUser().getLikedProducts().stream().map(ProductMapper::mapProductToProductShortResponse).toList();
+    }
+
+    @Override
+    public ProductResponse getProductById(Long id) {
+        return ProductMapper.mapProductToProductResponse(productRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Product not found by id = " + id)
+        ));
     }
 
     @Override
     public String likeProduct(Long id) {
-        return null;
+        User user = getAuthUser();
+        Product product = productRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Product by id = " + id + " not found!")
+        );
+        if (user.getLikedProducts().contains(product)) {
+            product.setLikes(product.getLikes() - 1);
+            user.getLikedProducts().remove(product);
+            userRepository.save(user);
+            return "Remove success";
+        }
+        product.setLikes(product.getLikes() + 1);
+        user.getLikedProducts().add(product);
+        userRepository.save(user);
+        return "Add success";
     }
 
     @Override
@@ -80,5 +106,9 @@ public class UserServiceImpl implements UserService {
     private User getUserByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new NotFoundException("User not found by username = " + username));
+    }
+
+    private User getAuthUser() {
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }
