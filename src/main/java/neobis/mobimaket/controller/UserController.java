@@ -10,10 +10,13 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import neobis.mobimaket.entity.dto.request.SendCodeRequest;
+import neobis.mobimaket.entity.dto.response.ProductShortResponse;
 import neobis.mobimaket.exception.reponse.ExceptionResponse;
 import neobis.mobimaket.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -66,4 +69,24 @@ public class UserController {
         return userService.sendMessage(request);
     }
 
+    @GetMapping("/get-personal-products")
+    @PreAuthorize("hasAuthority('USER_ACTIVE')")
+    @Operation(summary = "Getting all personal products", description = "For only fully filled user accounts")
+    public List<ProductShortResponse> getAllPersonalProducts() {
+        return userService.getAllPersonalProducts();
+    }
+
+    @GetMapping("/get-liked-products")
+    @PreAuthorize("hasAuthority('USER_ACTIVE')")
+    @Operation(summary = "Getting all liked products", description = "For only fully filled user accounts")
+    public List<ProductShortResponse> getAllLikedProducts() {
+        return userService.getAllLikedProducts();
+    }
+
+    @PutMapping("/like")
+    @PreAuthorize("hasAuthority('USER_ACTIVE')")
+    @Operation(summary = "Like or Dislike", description = "Make like and dislike via product id")
+    public String likeProduct(@RequestParam @Positive Long id) {
+        return userService.likeProduct(id);
+    }
 }

@@ -28,7 +28,8 @@ public class AuthController {
                             content = @Content(mediaType = "string"),
                             responseCode = "200", description = "Good"),
                     @ApiResponse(
-                            content = @Content(mediaType = "application/json"),
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ExceptionResponse.class)),
                             responseCode = "302", description = "User already exist exception"),
                     @ApiResponse(
                             content = @Content(mediaType = "application/json",

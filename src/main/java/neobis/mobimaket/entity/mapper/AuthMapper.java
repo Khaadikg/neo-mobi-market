@@ -4,7 +4,6 @@ import neobis.mobimaket.entity.User;
 import neobis.mobimaket.entity.dto.request.RegistrationRequest;
 import neobis.mobimaket.entity.dto.response.LoginResponse;
 import neobis.mobimaket.entity.enums.Role;
-import neobis.mobimaket.entity.enums.UserState;
 
 public class AuthMapper {
     public static LoginResponse loginView(String token, String refreshToken, User user) {
@@ -21,7 +20,6 @@ public class AuthMapper {
                 .email(request.getEmail())
                 .username(request.getUsername())
                 .role(Role.USER)
-                .state(UserState.EMPTY)
                 .build();
     }
 }

@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import neobis.mobimaket.entity.Product;
 import neobis.mobimaket.entity.User;
+import neobis.mobimaket.entity.UserInfo;
 import neobis.mobimaket.entity.dto.request.SendCodeRequest;
 import neobis.mobimaket.entity.dto.request.UserRequest;
-import neobis.mobimaket.entity.dto.response.ProductResponse;
 import neobis.mobimaket.entity.dto.response.ProductShortResponse;
 import neobis.mobimaket.entity.mapper.ProductMapper;
 import neobis.mobimaket.exception.IncorrectCodeException;
@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 @Service
@@ -40,51 +41,49 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<ProductShortResponse> getAllMyProducts() {
+    public List<ProductShortResponse> getAllPersonalProducts() {
         return getAuthUser().getMyProducts().stream().map(ProductMapper::mapProductToProductShortResponse).toList();
     }
 
     @Override
-    public List<ProductShortResponse> getAllMyLikedProducts() {
+    public List<ProductShortResponse> getAllLikedProducts() {
         return getAuthUser().getLikedProducts().stream().map(ProductMapper::mapProductToProductShortResponse).toList();
     }
 
     @Override
-    public ProductResponse getProductById(Long id) {
-        return ProductMapper.mapProductToProductResponse(productRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Product not found by id = " + id)
-        ));
-    }
-
-    @Override
     public String likeProduct(Long id) {
-        User user = getAuthUser();
         Product product = productRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Product by id = " + id + " not found!")
         );
+        User user = getAuthUser();
         if (user.getLikedProducts().contains(product)) {
             product.setLikes(product.getLikes() - 1);
             user.getLikedProducts().remove(product);
-            userRepository.save(user);
+            productRepository.saveAll(user.getLikedProducts());
             return "Remove success";
         }
         product.setLikes(product.getLikes() + 1);
         user.getLikedProducts().add(product);
-        userRepository.save(user);
+        productRepository.saveAll(user.getLikedProducts());
         return "Add success";
     }
 
     @Override
     public String numberConfirm(Integer code, SendCodeRequest request) {
         User user = getUserByUsername(request.getUsername());
-        if (!user.getToken().equals(code)) {
+        if (!Objects.equals(user.getToken(), code)) {
             throw new IncorrectCodeException("Code is not correct");
+        }
+        if (user.getTokenExpiration().isBefore(LocalDateTime.now())) {
+            user.setToken(0);
+            user.setTokenExpiration(null);
+            userRepository.save(user);
+            throw new TokenExpiredException("Your code got expired send new one!");
         }
         user.setToken(0);
         user.setTokenExpiration(null);
-        if (user.getTokenExpiration().isBefore(LocalDateTime.now())) {
-            userRepository.save(user);
-            throw new TokenExpiredException("Your code got expired send new one!");
+        if (user.getUserInfo() == null) {
+            user.setUserInfo(new UserInfo());
         }
         user.getUserInfo().setPhone(request.getPhone());
         userRepository.save(user);

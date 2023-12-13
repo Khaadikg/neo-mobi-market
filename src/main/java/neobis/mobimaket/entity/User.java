@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import neobis.mobimaket.entity.enums.Role;
-import neobis.mobimaket.entity.enums.UserState;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,8 +19,8 @@ import java.util.List;
 @Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 @Builder
+@Getter @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User implements UserDetails {
     @Id
@@ -36,8 +35,6 @@ public class User implements UserDetails {
     String profilePhoto;
     @Embedded
     UserInfo userInfo;
-    @Enumerated(EnumType.STRING)
-    UserState state;
     Integer token;
     LocalDateTime tokenExpiration;
     LocalDate birthDay;

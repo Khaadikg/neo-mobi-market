@@ -8,7 +8,7 @@ import neobis.mobimaket.entity.dto.request.LoginRequest;
 import neobis.mobimaket.entity.dto.request.RefreshTokenRequest;
 import neobis.mobimaket.entity.dto.request.RegistrationRequest;
 import neobis.mobimaket.entity.dto.response.LoginResponse;
-import neobis.mobimaket.entity.enums.UserState;
+import neobis.mobimaket.entity.enums.Role;
 import neobis.mobimaket.entity.mapper.AuthMapper;
 import neobis.mobimaket.exception.IncorrectLoginException;
 import neobis.mobimaket.exception.NotFoundException;
@@ -32,7 +32,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public LoginResponse login(LoginRequest request) {
         User existUser = getUserByUsername(request.getUsername());
-        if (encoder.matches(request.getPassword(), existUser.getPassword()) && existUser.getState() != UserState.DELETED) {
+        if (encoder.matches(request.getPassword(), existUser.getPassword()) && existUser.getRole() != Role.REMOVED) {
             return AuthMapper.loginView(jwtTokenUtil.generateToken(existUser), jwtTokenUtil.generateRefreshToken(existUser), existUser);
         } else {
             throw new IncorrectLoginException("Password is not correct or Access denied! You are not registered");
@@ -46,6 +46,7 @@ public class AuthServiceImpl implements AuthService {
         }
         User user = AuthMapper.mapUserRequestToUser(request);
         user.setPassword(encoder.encode(request.getPassword()));
+        user.setRole(Role.USER);
         userRepository.save(user);
         return "User successfully saved!";
     }
