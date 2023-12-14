@@ -5,11 +5,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import neobis.mobimaket.entity.Product;
 import neobis.mobimaket.entity.User;
-import neobis.mobimaket.entity.UserInfo;
 import neobis.mobimaket.entity.dto.request.SendCodeRequest;
 import neobis.mobimaket.entity.dto.request.UserRequest;
 import neobis.mobimaket.entity.dto.response.ProductShortResponse;
 import neobis.mobimaket.entity.mapper.ProductMapper;
+import neobis.mobimaket.entity.mapper.UserMapper;
 import neobis.mobimaket.exception.IncorrectCodeException;
 import neobis.mobimaket.exception.NotFoundException;
 import neobis.mobimaket.exception.TokenExpiredException;
@@ -31,8 +31,10 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
     ProductRepository productRepository;
     @Override
-    public String updateProfile(UserRequest request) {
-        return null;
+    public String updateProfile(UserRequest request) { // NotFound ex, Validation ex
+        User user = getAuthUser();
+        user.setUserInfo(UserMapper.mapUserRequestToUserInfo(request));
+        return "success";
     }
 
     @Override
@@ -82,10 +84,7 @@ public class UserServiceImpl implements UserService {
         }
         user.setToken(0);
         user.setTokenExpiration(null);
-        if (user.getUserInfo() == null) {
-            user.setUserInfo(new UserInfo());
-        }
-        user.getUserInfo().setPhone(request.getPhone());
+        user.setPhone(request.getPhone());
         userRepository.save(user);
         return "Phone number set successfully!";
     }

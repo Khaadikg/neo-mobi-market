@@ -10,6 +10,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import neobis.mobimaket.entity.dto.request.SendCodeRequest;
+import neobis.mobimaket.entity.dto.request.UserRequest;
 import neobis.mobimaket.entity.dto.response.ProductShortResponse;
 import neobis.mobimaket.exception.reponse.ExceptionResponse;
 import neobis.mobimaket.service.UserService;
@@ -89,5 +90,25 @@ public class UserController {
     @Operation(summary = "Like or Dislike", description = "Make like and dislike via product id")
     public String likeProduct(@RequestParam @Positive Long id) {
         return userService.likeProduct(id);
+    }
+
+    @PutMapping()
+    @Operation(summary = "Update profile", description = "Updates user profile, user must be already saved via sign-up",
+            responses = {
+                    @ApiResponse(
+                            content = @Content(mediaType = "string"),
+                            responseCode = "200", description = "Good"),
+                    @ApiResponse(
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ExceptionResponse.class)),
+                            responseCode = "406", description = "Validation exception"),
+                    @ApiResponse(
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ExceptionResponse.class)),
+                            responseCode = "404", description = "User not found with such username exception")
+            }
+    )
+    public String updateProfile(@RequestBody UserRequest request) {
+        return userService.updateProfile(request);
     }
 }

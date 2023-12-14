@@ -77,7 +77,7 @@ public class ProductController {
                                                      @Parameter(description = "Amount of items", required = true)
                                                      @RequestParam Optional<Integer> pageSize ) {
         int page = pageNumber.filter(p -> p >= 1).map(p -> p - 1).orElse(0);
-        int amount = pageSize.orElse(0);
+        int amount = pageSize.orElse(1);
         return productService.getAllProduct(PageRequest.of(page, amount));
 
     }

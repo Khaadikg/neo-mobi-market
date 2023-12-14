@@ -4,6 +4,8 @@ import jakarta.persistence.Embeddable;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
+
 @Embeddable
 @Builder
 @Data
@@ -14,5 +16,5 @@ public class UserInfo {
     String name;
     String surname;
     String lastname;
-    String phone;
+    LocalDate birthDate;
 }
