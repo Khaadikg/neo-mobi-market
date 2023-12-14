@@ -10,6 +10,7 @@ import neobis.mobimaket.entity.dto.request.LoginRequest;
 import neobis.mobimaket.entity.dto.request.RefreshTokenRequest;
 import neobis.mobimaket.entity.dto.request.RegistrationRequest;
 import neobis.mobimaket.entity.dto.response.LoginResponse;
+import neobis.mobimaket.entity.dto.response.RefreshTokenResponse;
 import neobis.mobimaket.exception.reponse.ExceptionResponse;
 import neobis.mobimaket.service.AuthService;
 import org.springframework.web.bind.annotation.*;
@@ -86,7 +87,7 @@ public class AuthController {
                             responseCode = "404", description = "User not found exception")
             }
     )
-    public String getRefreshToken(@RequestBody RefreshTokenRequest request) {
+    public RefreshTokenResponse getRefreshToken(@RequestBody RefreshTokenRequest request) {
         return authService.refreshToken(request);
     }
 }

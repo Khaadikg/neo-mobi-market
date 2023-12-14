@@ -8,6 +8,7 @@ import neobis.mobimaket.entity.dto.request.LoginRequest;
 import neobis.mobimaket.entity.dto.request.RefreshTokenRequest;
 import neobis.mobimaket.entity.dto.request.RegistrationRequest;
 import neobis.mobimaket.entity.dto.response.LoginResponse;
+import neobis.mobimaket.entity.dto.response.RefreshTokenResponse;
 import neobis.mobimaket.entity.enums.Role;
 import neobis.mobimaket.entity.mapper.AuthMapper;
 import neobis.mobimaket.exception.IncorrectLoginException;
@@ -52,10 +53,13 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String refreshToken(RefreshTokenRequest request) {
+    public RefreshTokenResponse refreshToken(RefreshTokenRequest request) {
         User user = getUserByUsername(request.getUsername());
         if (jwtTokenUtil.validationToken(request.getToken(), user)) {
-            return jwtTokenUtil.generateToken(user);
+            return RefreshTokenResponse.builder()
+                    .refreshToken(jwtTokenUtil.generateRefreshToken(user))
+                    .accessToken(jwtTokenUtil.generateToken(user))
+                    .build();
         }
         throw new TokenExpiredException("Your refresh token got expired!");
     }
