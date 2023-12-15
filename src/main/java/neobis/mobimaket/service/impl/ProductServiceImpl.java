@@ -53,6 +53,15 @@ public class ProductServiceImpl implements ProductService {
         return ProductMapper.mapProductToProductResponse(getById(id));
     }
 
+    @Override
+    public String deleteProductById(Long id) {
+        Product product = productRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Product not found by id = " + id)
+        );
+        productRepository.delete(product);
+        return "Product deleted!";
+    }
+
     private Product getById(Long id) {
         return productRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Product not found by id = " + id)

@@ -12,4 +12,5 @@ public interface ProductService {
     String updateProduct(Long id, ProductRequest request);
     List<ProductShortResponse> getAllProduct(Pageable pageable);
     ProductResponse getProductById(Long id);
+    String deleteProductById(Long id);
 }

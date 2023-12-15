@@ -81,4 +81,21 @@ public class ProductController {
         return productService.getAllProduct(PageRequest.of(page, amount));
 
     }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete product", description = "Update product by id, For only fully filled user accounts",
+            responses = {
+                    @ApiResponse(
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = LoginResponse.class)),
+                            responseCode = "200", description = "Good"),
+                    @ApiResponse(
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ExceptionResponse.class)),
+                            responseCode = "404", description = "User not found exception")
+            }
+    )
+    public String deleteProductById(@PathVariable Long id) {
+        return productService.deleteProductById(id);
+    }
 }

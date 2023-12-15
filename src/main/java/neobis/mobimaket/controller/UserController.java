@@ -87,7 +87,17 @@ public class UserController {
 
     @PutMapping("/like")
     @PreAuthorize("hasAuthority('USER_ACTIVE')")
-    @Operation(summary = "Like or Dislike", description = "Make like and dislike via product id")
+    @Operation(summary = "Like or Dislike", description = "Make like and dislike via product id",
+            responses = {
+                    @ApiResponse(
+                            content = @Content(mediaType = "string"),
+                            responseCode = "200", description = "Good"),
+                    @ApiResponse(
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ExceptionResponse.class)),
+                            responseCode = "404", description = "Product not found with such id exception")
+            }
+    )
     public String likeProduct(@RequestParam @Positive Long id) {
         return userService.likeProduct(id);
     }
