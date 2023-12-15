@@ -30,6 +30,7 @@ import java.util.Random;
 public class UserServiceImpl implements UserService {
     UserRepository userRepository;
     ProductRepository productRepository;
+    SmsService smsService;
     @Override
     public String updateProfile(UserRequest request) { // NotFound ex, Validation ex
         User user = getAuthUser();
@@ -97,8 +98,8 @@ public class UserServiceImpl implements UserService {
         user.setToken(token);
         user.setTokenExpiration(LocalDateTime.now().plusMinutes(5));
         userRepository.save(user);
-        return String.valueOf(token);
-//        return smsSender.sendSms(request, String.valueOf(token));
+//        return String.valueOf(token);
+        return smsService.sendSms(request, String.valueOf(token));
     }
 
     private User getUserByUsername(String username) {
@@ -107,6 +108,6 @@ public class UserServiceImpl implements UserService {
     }
 
     private User getAuthUser() {
-        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).orElse(null);
     }
 }

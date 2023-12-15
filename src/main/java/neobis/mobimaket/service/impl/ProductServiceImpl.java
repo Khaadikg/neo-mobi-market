@@ -12,6 +12,7 @@ import neobis.mobimaket.entity.mapper.ProductMapper;
 import neobis.mobimaket.exception.NotFoundException;
 import neobis.mobimaket.repository.ProductPagingRepository;
 import neobis.mobimaket.repository.ProductRepository;
+import neobis.mobimaket.repository.UserRepository;
 import neobis.mobimaket.service.ProductService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +26,7 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
     ProductRepository productRepository;
     ProductPagingRepository pagingRepository;
+    UserRepository userRepository;
     @Override
     public String addProduct(ProductRequest request) {
         Product product = ProductMapper.mapProductRequestToProduct(request);
@@ -68,6 +70,6 @@ public class ProductServiceImpl implements ProductService {
         );
     }
     private User getAuthUser() {
-        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).orElse(null);
     }
 }

@@ -67,7 +67,7 @@ public class ProductController {
                     responseCode = "404", description = "User not found exception")
     }
     )
-    public String updateProduct(Long id, ProductRequest request) {
+    public String updateProduct(@RequestParam Long id, @RequestBody ProductRequest request) {
         return productService.updateProduct(id, request);
     }
 
@@ -84,7 +84,7 @@ public class ProductController {
 
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping()
     @PreAuthorize("hasAnyAuthority('USER_ACTIVE')")
     @Operation(summary = "Delete product", description = "Update product by id, For only fully filled user accounts",
             responses = {
@@ -98,7 +98,7 @@ public class ProductController {
                             responseCode = "404", description = "User not found exception")
             }
     )
-    public String deleteProductById(@PathVariable Long id) {
+    public String deleteProductById(@RequestParam Long id) {
         return productService.deleteProductById(id);
     }
 }

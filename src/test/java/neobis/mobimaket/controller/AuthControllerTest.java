@@ -53,6 +53,7 @@ class AuthControllerTest {
     }
     @Test
     void registration() throws Exception {
+        userRepository.findByUsername("regis_username").ifPresent(userRepository::delete);
         this.mockMvc.perform(MockMvcRequestBuilders.post(URL + "/sign-up")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(RegistrationRequest.builder()
@@ -67,7 +68,7 @@ class AuthControllerTest {
 
     @Test
     void login() throws Exception{
-        if (userRepository.findByUsername("some_username_valid").isEmpty()) {
+        if (userRepository.findByUsername("some_username").isEmpty()) {
             userRepository.save(User.builder()
                     .role(Role.USER)
                     .tokenExpiration(LocalDateTime.now().plusMinutes(5))
