@@ -54,6 +54,7 @@ public class ProductController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('USER_ACTIVE')")
     @Operation(summary = "Update product", description = "Update product by id, For only fully filled user accounts",
             responses = {
             @ApiResponse(
@@ -71,7 +72,8 @@ public class ProductController {
     }
 
     @GetMapping("/all")
-    @Operation(summary = "Gets all products", description = "Get all products that has been created, For only fully filled user accounts")
+    @PreAuthorize("hasAnyAuthority('USER_ACTIVE', 'USER')")
+    @Operation(summary = "Gets all products", description = "Get all products that has been created, For all users")
     public List<ProductShortResponse> getAllProducts(@Parameter(description = "Number of page", required = true)
                                                          @RequestParam Optional<Integer> pageNumber,
                                                      @Parameter(description = "Amount of items", required = true)
@@ -83,6 +85,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('USER_ACTIVE')")
     @Operation(summary = "Delete product", description = "Update product by id, For only fully filled user accounts",
             responses = {
                     @ApiResponse(

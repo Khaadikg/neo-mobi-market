@@ -28,7 +28,7 @@ public class UserController {
     UserService userService;
 
     @PutMapping("/phone-confirm")
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAnyAuthority('USER', 'USER_ACTIVE')")
     @Operation(summary = "Phone confirmation", description = "Add number for SAVED user account by 4 digit code sent by SMS, if token EXPIRED deletes old token",
             responses = {
                     @ApiResponse(
@@ -51,7 +51,7 @@ public class UserController {
     }
 
     @PutMapping("/send-code")
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAnyAuthority('USER', 'USER_ACTIVE')")
     @Operation(summary = "Registration send code", description = "Sends new code, user must be already saved via sign-up",
             responses = {
                     @ApiResponse(
@@ -103,6 +103,7 @@ public class UserController {
     }
 
     @PutMapping()
+    @PreAuthorize("hasAnyAuthority('USER', 'USER_ACTIVE')")
     @Operation(summary = "Update profile", description = "Updates user profile, user must be already saved via sign-up",
             responses = {
                     @ApiResponse(
