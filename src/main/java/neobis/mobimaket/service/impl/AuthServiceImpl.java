@@ -28,7 +28,7 @@ public class AuthServiceImpl implements AuthService {
     UserRepository userRepository;
     BCryptPasswordEncoder encoder;
     JwtTokenUtil jwtTokenUtil;
-    SmsSender smsSender;
+    SmsService smsService;
 
     @Override
     public LoginResponse login(LoginRequest request) {

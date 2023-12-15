@@ -11,12 +11,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class SmsSender{
+public class SmsService {
 
     private final TwilioConfig twilioConfiguration;
 
     @Autowired
-    public SmsSender(TwilioConfig twilioConfiguration) {
+    public SmsService(TwilioConfig twilioConfiguration) {
         this.twilioConfiguration = twilioConfiguration;
     }
 

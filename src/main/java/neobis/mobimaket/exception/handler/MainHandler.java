@@ -41,9 +41,9 @@ public class MainHandler {
     }
 
     @ExceptionHandler(UserAlreadyExistException.class)
-    @ResponseStatus(HttpStatus.FOUND)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponse UserAlreadyExistException(UserAlreadyExistException e) { // если введенный логин уже существует
-        return new ExceptionResponse(HttpStatus.FOUND, e.getClass().getName(), e.getMessage());
+        return new ExceptionResponse(HttpStatus.BAD_REQUEST, e.getClass().getName(), e.getMessage());
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
