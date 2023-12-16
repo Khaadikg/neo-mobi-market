@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "products")
 @NoArgsConstructor
@@ -22,6 +24,9 @@ public class Product {
     Double price;
     String photo;
     int likes;
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH, CascadeType.MERGE}, mappedBy = "likedProducts")
+    Set<User> liker;
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH, CascadeType.MERGE})
     @JoinColumn(name = "owner_id")

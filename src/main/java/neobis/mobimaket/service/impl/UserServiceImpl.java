@@ -18,6 +18,7 @@ import neobis.mobimaket.repository.UserRepository;
 import neobis.mobimaket.service.UserService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -54,21 +55,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public String likeProduct(Long id) {
         Product product = productRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Product by id = " + id + " not found!")
         );
         User user = getAuthUser();
-        if (user.getLikedProducts().contains(product)) {
+        if (productRepository.findByIdAndIdOfLikedUser(id, user.getId()) != null) {
             product.setLikes(product.getLikes() - 1);
             user.getLikedProducts().remove(product);
             productRepository.saveAll(user.getLikedProducts());
-            return "Remove success";
+            return "Dislike success";
         }
         product.setLikes(product.getLikes() + 1);
         user.getLikedProducts().add(product);
         productRepository.saveAll(user.getLikedProducts());
-        return "Add success";
+        return "Like success";
     }
 
     @Override
