@@ -98,8 +98,8 @@ public class UserServiceImpl implements UserService {
         user.setToken(token);
         user.setTokenExpiration(LocalDateTime.now().plusMinutes(5));
         userRepository.save(user);
-//        return String.valueOf(token);
-        return smsService.sendSms(request, String.valueOf(token));
+        return String.valueOf(token);
+//        return smsService.sendSms(request, String.valueOf(token));
     }
 
     private User getUserByUsername(String username) {

@@ -44,9 +44,9 @@ public class UserController {
                             responseCode = "406", description = "Code is not correct")
             }
     )
-    public String registrationConfirm(@Parameter(description = "Code for user ensure number sent by SMS", required = true)
+    public String phoneConfirm(@Parameter(description = "Code for user ensure number sent by SMS", required = true)
                                       @RequestParam(name = "code") @Positive Integer code,
-                                      @RequestBody SendCodeRequest request) {
+                               @RequestBody SendCodeRequest request) {
         return userService.numberConfirm(code, request);
     }
 

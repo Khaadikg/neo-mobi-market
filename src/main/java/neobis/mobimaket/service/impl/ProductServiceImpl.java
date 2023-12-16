@@ -69,6 +69,7 @@ public class ProductServiceImpl implements ProductService {
                 () -> new NotFoundException("Product not found by id = " + id)
         );
     }
+
     private User getAuthUser() {
         return userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).orElse(null);
     }
