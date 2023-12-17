@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin()
+@CrossOrigin
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequestMapping("api/user")
@@ -129,7 +129,14 @@ public class UserController {
 
     @PostMapping("/my-photo")
     @PreAuthorize("hasAnyAuthority('USER', 'USER_ACTIVE')")
-    public String updateProfileImage(@Parameter(description = "An profile image to upload", required = true)
+    @Operation(summary = "Update profile", description = "Updates user profile, user must be already saved via sign-up",
+            responses = {
+                    @ApiResponse(
+                            content = @Content(mediaType = "string"),
+                            responseCode = "200", description = "Good")
+            }
+    )
+    public String updateProfileImage(@Parameter(description = "A profile image to upload", required = true)
                                         @RequestParam("file") MultipartFile multipartFile) {
         Map result = cloudinaryService.upload(multipartFile, "Haadi");
         return userService.updateProfilePhoto(result);
