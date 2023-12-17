@@ -13,11 +13,14 @@ import neobis.mobimaket.entity.dto.request.SendCodeRequest;
 import neobis.mobimaket.entity.dto.request.UserRequest;
 import neobis.mobimaket.entity.dto.response.ProductShortResponse;
 import neobis.mobimaket.exception.reponse.ExceptionResponse;
+import neobis.mobimaket.service.CloudinaryService;
 import neobis.mobimaket.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin()
@@ -26,6 +29,7 @@ import java.util.List;
 @RequestMapping("api/user")
 public class UserController {
     UserService userService;
+    CloudinaryService cloudinaryService;
 
     @PutMapping("/phone-confirm")
     @PreAuthorize("hasAnyAuthority('USER', 'USER_ACTIVE')")
@@ -122,4 +126,13 @@ public class UserController {
     public String updateProfile(@RequestBody UserRequest request) {
         return userService.updateProfile(request);
     }
+
+    @PostMapping("/my-photo")
+    @PreAuthorize("hasAnyAuthority('USER', 'USER_ACTIVE')")
+    public String updateProfileImage(@Parameter(description = "An profile image to upload", required = true)
+                                        @RequestParam("file") MultipartFile multipartFile) {
+        Map result = cloudinaryService.upload(multipartFile, "Haadi");
+        return userService.updateProfilePhoto(result);
+    }
+
 }

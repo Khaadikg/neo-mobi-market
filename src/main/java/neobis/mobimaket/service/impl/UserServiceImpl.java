@@ -3,6 +3,7 @@ package neobis.mobimaket.service.impl;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import neobis.mobimaket.entity.Image;
 import neobis.mobimaket.entity.Product;
 import neobis.mobimaket.entity.User;
 import neobis.mobimaket.entity.dto.request.SendCodeRequest;
@@ -13,8 +14,10 @@ import neobis.mobimaket.entity.mapper.UserMapper;
 import neobis.mobimaket.exception.IncorrectCodeException;
 import neobis.mobimaket.exception.NotFoundException;
 import neobis.mobimaket.exception.TokenExpiredException;
+import neobis.mobimaket.repository.ImageRepository;
 import neobis.mobimaket.repository.ProductRepository;
 import neobis.mobimaket.repository.UserRepository;
+import neobis.mobimaket.service.CloudinaryService;
 import neobis.mobimaket.service.UserService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
@@ -31,6 +35,8 @@ import java.util.Random;
 public class UserServiceImpl implements UserService {
     UserRepository userRepository;
     ProductRepository productRepository;
+    CloudinaryService cloudinaryService;
+    ImageRepository imageRepository;
     SmsService smsService;
     @Override
     public String updateProfile(UserRequest request) { // NotFound ex, Validation ex
@@ -40,8 +46,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String updateProfilePhoto(String photo) {
-        return null;
+    public String updateProfilePhoto(Map result) {
+        Image image = Image.builder().name((String) result.get("original_filename"))
+                .imageUrl((String) result.get("url"))
+                .imageId(String.valueOf(result.get("public_id"))).build();
+        User user = getAuthUser();
+        Long oldId = null;
+        if(user.getProfilePhoto() != null){
+            oldId = user.getProfilePhoto().getId();
+            cloudinaryService.delete(user.getProfilePhoto().getImageId());
+        }
+        user.setProfilePhoto(image);
+        userRepository.save(user);
+        if (oldId != null) {
+            imageRepository.deleteById(oldId);
+        }
+        return "Profile photo updated!";
     }
 
     @Override

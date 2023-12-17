@@ -31,12 +31,13 @@ public class User implements UserDetails {
     String username;
     String password;
     String email;
-    String profilePhoto;
     @Embedded
     UserInfo userInfo;
     Integer token;
     LocalDateTime tokenExpiration;
     String phone;
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH}, orphanRemoval = true)
+    Image profilePhoto;
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REFRESH}, mappedBy = "owner")
