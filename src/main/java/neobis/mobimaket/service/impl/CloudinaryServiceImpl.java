@@ -5,11 +5,13 @@ import com.cloudinary.utils.ObjectUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import neobis.mobimaket.exception.NotFoundException;
 import neobis.mobimaket.service.CloudinaryService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -23,6 +25,9 @@ public class CloudinaryServiceImpl implements CloudinaryService {
     Cloudinary cloudinary;
 
     public Map upload(MultipartFile multipartFile, String folder) {
+        if (multipartFile.isEmpty()) {
+            throw new NotFoundException("Didn't uploaded anything!");
+        }
         File file = convert(multipartFile);
         Map result = null;
         try {

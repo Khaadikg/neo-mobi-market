@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.io.IOException;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -75,4 +76,9 @@ public class MainHandler {
                 .collect(toList());
     }
 
+    @ExceptionHandler(IOException.class)
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    public ExceptionResponse onIoExceptionException(IOException e) {
+        return new ExceptionResponse(HttpStatus.NOT_ACCEPTABLE, e.getClass().getName(), e.getMessage());
+    }
 }
