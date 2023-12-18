@@ -8,7 +8,9 @@ import neobis.mobimaket.entity.Product;
 import neobis.mobimaket.entity.User;
 import neobis.mobimaket.entity.dto.request.SendCodeRequest;
 import neobis.mobimaket.entity.dto.request.UserRequest;
+import neobis.mobimaket.entity.dto.response.ImageResponse;
 import neobis.mobimaket.entity.dto.response.ProductShortResponse;
+import neobis.mobimaket.entity.mapper.ImageMapper;
 import neobis.mobimaket.entity.mapper.ProductMapper;
 import neobis.mobimaket.entity.mapper.UserMapper;
 import neobis.mobimaket.exception.IncorrectCodeException;
@@ -46,7 +48,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String updateProfilePhoto(Map result) {
+    public ImageResponse updateProfilePhoto(Map result) {
         Image image = Image.builder().name((String) result.get("original_filename"))
                 .imageUrl((String) result.get("url"))
                 .imageId(String.valueOf(result.get("public_id"))).build();
@@ -61,7 +63,7 @@ public class UserServiceImpl implements UserService {
         if (oldId != null) {
             imageRepository.deleteById(oldId);
         }
-        return "Profile photo updated!";
+        return ImageMapper.mapImageTOImageResponse(image);
     }
 
     @Override
