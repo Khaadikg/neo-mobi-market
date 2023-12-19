@@ -10,6 +10,7 @@ import neobis.mobimaket.entity.dto.request.SendCodeRequest;
 import neobis.mobimaket.entity.dto.request.UserRequest;
 import neobis.mobimaket.entity.dto.response.ImageResponse;
 import neobis.mobimaket.entity.dto.response.ProductShortResponse;
+import neobis.mobimaket.entity.enums.Role;
 import neobis.mobimaket.entity.mapper.ImageMapper;
 import neobis.mobimaket.entity.mapper.ProductMapper;
 import neobis.mobimaket.entity.mapper.UserMapper;
@@ -107,6 +108,7 @@ public class UserServiceImpl implements UserService {
             userRepository.save(user);
             throw new TokenExpiredException("Your code got expired send new one!");
         }
+        user.setRole(Role.USER_ACTIVE);
         user.setToken(0);
         user.setTokenExpiration(null);
         user.setPhone(request.getPhone());

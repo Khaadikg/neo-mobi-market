@@ -16,6 +16,7 @@ import neobis.mobimaket.entity.dto.response.ProductShortResponse;
 import neobis.mobimaket.exception.reponse.ExceptionResponse;
 import neobis.mobimaket.service.CloudinaryService;
 import neobis.mobimaket.service.UserService;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -128,7 +129,7 @@ public class UserController {
         return userService.updateProfile(request);
     }
 
-    @PostMapping("/my-photo")
+    @PostMapping(path = "/my-photo", consumes = "multipart/form-data")
     @PreAuthorize("hasAnyAuthority('USER', 'USER_ACTIVE')")
     @Operation(summary = "Update profile", description = "Updates user profile, user must be already saved via sign-up",
             responses = {
@@ -142,7 +143,10 @@ public class UserController {
                             responseCode = "404", description = "User not found with such username exception")
             }
     )
-    public ImageResponse updateProfileImage(@Parameter(description = "A profile image to upload", required = true)
+    public ImageResponse updateProfileImage(@Parameter(
+                                                    description = "A profile image to upload", required = true,
+                                                    content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE)
+                                            )
                                         @RequestParam("file") MultipartFile multipartFile) {
         Map result = cloudinaryService.upload(multipartFile, "Haadi");
         return userService.updateProfilePhoto(result);
