@@ -21,6 +21,7 @@ import neobis.mobimaket.service.ProductService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -43,9 +44,7 @@ public class ProductServiceImpl implements ProductService {
     public String addProduct(ProductRequest request, MultipartFile[] multipartFiles) {
         log.info("Starting to save images in Database!");
         List<Map> results = new ArrayList<>();
-        Arrays.stream(multipartFiles).forEach(file -> {
-            results.add(cloudinaryService.upload(file,  "product"));
-        });
+        Arrays.stream(multipartFiles).forEach(file -> results.add(cloudinaryService.upload(file,  "product")));
         log.info("Images saved into cloudinary!");
         log.info("Starting to save images in Database!");
         Product product = ProductMapper.mapProductRequestToProduct(request);
@@ -82,10 +81,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public String deleteProductById(Long id) {
         Product product = productRepository.findByIdAndIdOfUser(id, getAuthUser().getId()).orElseThrow(
                 () -> new NotFoundException("Product not found by id = " + id)
         );
+        imageService.deleteAllImagesByProductId(product.getId());
         productRepository.delete(product);
         return "Product deleted!";
     }

@@ -23,7 +23,7 @@ public class Product {
     String shortDescription;
     String fullDescription;
     Double price;
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REFRESH}, mappedBy = "product")
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REFRESH}, mappedBy = "product", orphanRemoval = true)
     List<Image> photo;
     int likes;
     @JsonIgnore

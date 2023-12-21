@@ -42,7 +42,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String registration(RegistrationRequest request) {
         if (userRepository.findByUniqConstraint(request.getUsername(), request.getEmail()).isPresent()) {
-            throw new UserAlreadyExistException("User with username = " + request.getEmail() + " already exist");
+            throw new UserAlreadyExistException("User with username = " + request.getUsername() + " already exist");
         }
         User user = AuthMapper.mapUserRequestToUser(request);
         user.setPassword(encoder.encode(request.getPassword()));

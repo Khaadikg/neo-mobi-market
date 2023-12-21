@@ -8,5 +8,6 @@ import java.util.List;
 public interface ImageService {
     ImageResponse saveImage(Image image);
 
-    List<ImageResponse> saveAllImages(List<Image> images);
+    void saveAllImages(List<Image> images);
+    void deleteAllImagesByProductId(Long id);
 }
