@@ -1,6 +1,8 @@
 package neobis.mobimaket.entity.dto.request;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 @Data

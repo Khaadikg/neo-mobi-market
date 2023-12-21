@@ -43,7 +43,13 @@ public class MainHandler {
 
     @ExceptionHandler(UserAlreadyExistException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionResponse UserAlreadyExistException(UserAlreadyExistException e) { // если введенный логин уже существует
+    public ExceptionResponse userAlreadyExistException(UserAlreadyExistException e) { // если введенный логин уже существует
+        return new ExceptionResponse(HttpStatus.BAD_REQUEST, e.getClass().getName(), e.getMessage());
+    }
+
+    @ExceptionHandler(JsonNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse jsonNotValidException(JsonNotValidException e) { // если введенный логин уже существует
         return new ExceptionResponse(HttpStatus.BAD_REQUEST, e.getClass().getName(), e.getMessage());
     }
 
@@ -78,7 +84,7 @@ public class MainHandler {
 
     @ExceptionHandler(IOException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
-    public ExceptionResponse onIoExceptionException(IOException e) {
+    public ExceptionResponse onIoException(IOException e) {
         return new ExceptionResponse(HttpStatus.NOT_ACCEPTABLE, e.getClass().getName(), e.getMessage());
     }
 }

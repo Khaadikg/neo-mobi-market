@@ -18,6 +18,8 @@ public class Image {
     private String name;
     private String imageUrl;
     private String imageId;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH, CascadeType.MERGE})
+    private Product product;
     @OneToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH}, mappedBy = "profilePhoto")
     private User user;
 }
