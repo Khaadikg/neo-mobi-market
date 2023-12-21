@@ -9,6 +9,7 @@ import neobis.mobimaket.entity.User;
 import neobis.mobimaket.entity.dto.request.SendCodeRequest;
 import neobis.mobimaket.entity.dto.request.UserRequest;
 import neobis.mobimaket.entity.dto.response.ImageResponse;
+import neobis.mobimaket.entity.dto.response.LikeResponse;
 import neobis.mobimaket.entity.dto.response.ProductShortResponse;
 import neobis.mobimaket.entity.enums.Role;
 import neobis.mobimaket.entity.mapper.ImageMapper;
@@ -79,7 +80,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public String likeProduct(Long id) {
+    public LikeResponse likeProduct(Long id) {
         Product product = productRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Product by id = " + id + " not found!")
         );
@@ -88,12 +89,18 @@ public class UserServiceImpl implements UserService {
             product.setLikes(product.getLikes() - 1);
             user.getLikedProducts().remove(product);
             productRepository.saveAll(user.getLikedProducts());
-            return "Dislike success";
+            return LikeResponse.builder()
+                    .like_count(product.getLikes())
+                    .type("DISLIKE")
+                    .build();
         }
         product.setLikes(product.getLikes() + 1);
         user.getLikedProducts().add(product);
         productRepository.saveAll(user.getLikedProducts());
-        return "Like success";
+        return LikeResponse.builder()
+                .like_count(product.getLikes())
+                .type("LIKE")
+                .build();
     }
 
     @Override

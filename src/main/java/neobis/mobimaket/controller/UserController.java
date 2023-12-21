@@ -12,6 +12,7 @@ import lombok.experimental.FieldDefaults;
 import neobis.mobimaket.entity.dto.request.SendCodeRequest;
 import neobis.mobimaket.entity.dto.request.UserRequest;
 import neobis.mobimaket.entity.dto.response.ImageResponse;
+import neobis.mobimaket.entity.dto.response.LikeResponse;
 import neobis.mobimaket.entity.dto.response.ProductShortResponse;
 import neobis.mobimaket.exception.reponse.ExceptionResponse;
 import neobis.mobimaket.service.CloudinaryService;
@@ -96,15 +97,16 @@ public class UserController {
     @Operation(summary = "Like or Dislike", description = "Make like and dislike via product id",
             responses = {
                     @ApiResponse(
-                            content = @Content(mediaType = "string"),
-                            responseCode = "200", description = "Good"),
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = LikeResponse.class)),
+                            responseCode = "200", description = "GOOD"),
                     @ApiResponse(
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ExceptionResponse.class)),
                             responseCode = "404", description = "Product not found with such id exception")
             }
     )
-    public String likeProduct(@RequestParam @Positive Long id) {
+    public LikeResponse likeProduct(@RequestParam @Positive Long id) {
         return userService.likeProduct(id);
     }
 

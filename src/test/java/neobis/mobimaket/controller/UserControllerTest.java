@@ -93,7 +93,7 @@ class UserControllerTest {
         this.mockMvc.perform(MockMvcRequestBuilders.put(URL + "/like")
                 .param("id", "1"))
                 .andDo(print())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.ALL))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
