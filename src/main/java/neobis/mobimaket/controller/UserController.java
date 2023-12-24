@@ -11,10 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import neobis.mobimaket.entity.dto.request.SendCodeRequest;
 import neobis.mobimaket.entity.dto.request.UserRequest;
-import neobis.mobimaket.entity.dto.response.ImageResponse;
-import neobis.mobimaket.entity.dto.response.LikeResponse;
-import neobis.mobimaket.entity.dto.response.ProductShortResponse;
-import neobis.mobimaket.entity.dto.response.UserResponse;
+import neobis.mobimaket.entity.dto.response.*;
 import neobis.mobimaket.exception.reponse.ExceptionResponse;
 import neobis.mobimaket.service.CloudinaryService;
 import neobis.mobimaket.service.UserService;
@@ -40,8 +37,9 @@ public class UserController {
     @Operation(summary = "Phone confirmation", description = "Add number for SAVED user account by 4 digit code sent by SMS, if token EXPIRED deletes old token",
             responses = {
                     @ApiResponse(
-                            content = @Content(mediaType = "string"),
-                            responseCode = "200", description = "Good"),
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = LikeResponse.class)),
+                            responseCode = "200", description = "GOOD"),
                     @ApiResponse(
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ExceptionResponse.class)),
@@ -52,9 +50,9 @@ public class UserController {
                             responseCode = "406", description = "Code is not correct")
             }
     )
-    public String phoneConfirm(@Parameter(description = "Code for user ensure number sent by SMS", required = true)
+    public SingleStringResponse phoneConfirm(@Parameter(description = "Code for user ensure number sent by SMS", required = true)
                                       @RequestParam(name = "code") @Positive Integer code,
-                               @RequestBody SendCodeRequest request) {
+                                             @RequestBody SendCodeRequest request) {
         return userService.numberConfirm(code, request);
     }
 
@@ -158,7 +156,7 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('USER', 'USER_ACTIVE')")
-    @Operation(summary = "Update profile", description = "Updates user profile, user must be already saved via sign-up",
+    @Operation(summary = "Get profile", description = "Get user profile, user must be already saved via sign-up",
             responses = {
                     @ApiResponse(
                             content = @Content(mediaType = "application/json",

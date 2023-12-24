@@ -8,10 +8,7 @@ import neobis.mobimaket.entity.Product;
 import neobis.mobimaket.entity.User;
 import neobis.mobimaket.entity.dto.request.SendCodeRequest;
 import neobis.mobimaket.entity.dto.request.UserRequest;
-import neobis.mobimaket.entity.dto.response.ImageResponse;
-import neobis.mobimaket.entity.dto.response.LikeResponse;
-import neobis.mobimaket.entity.dto.response.ProductShortResponse;
-import neobis.mobimaket.entity.dto.response.UserResponse;
+import neobis.mobimaket.entity.dto.response.*;
 import neobis.mobimaket.entity.enums.Role;
 import neobis.mobimaket.entity.mapper.ImageMapper;
 import neobis.mobimaket.entity.mapper.ProductMapper;
@@ -105,7 +102,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String numberConfirm(Integer code, SendCodeRequest request) {
+    public SingleStringResponse numberConfirm(Integer code, SendCodeRequest request) {
         User user = getUserByUsername(request.getUsername());
         if (!Objects.equals(user.getToken(), code)) {
             throw new IncorrectCodeException("Code is not correct");
@@ -121,7 +118,7 @@ public class UserServiceImpl implements UserService {
         user.setTokenExpiration(null);
         user.setPhone(request.getPhone());
         userRepository.save(user);
-        return "Phone number set successfully!";
+        return SingleStringResponse.builder().output(request.getPhone()).build();
     }
 
     @Override
