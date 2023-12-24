@@ -14,6 +14,7 @@ import neobis.mobimaket.entity.dto.request.UserRequest;
 import neobis.mobimaket.entity.dto.response.ImageResponse;
 import neobis.mobimaket.entity.dto.response.LikeResponse;
 import neobis.mobimaket.entity.dto.response.ProductShortResponse;
+import neobis.mobimaket.entity.dto.response.UserResponse;
 import neobis.mobimaket.exception.reponse.ExceptionResponse;
 import neobis.mobimaket.service.CloudinaryService;
 import neobis.mobimaket.service.UserService;
@@ -115,8 +116,9 @@ public class UserController {
     @Operation(summary = "Update profile", description = "Updates user profile, user must be already saved via sign-up",
             responses = {
                     @ApiResponse(
-                            content = @Content(mediaType = "string"),
-                            responseCode = "200", description = "Good"),
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = LikeResponse.class)),
+                            responseCode = "200", description = "GOOD"),
                     @ApiResponse(
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ExceptionResponse.class)),
@@ -127,7 +129,7 @@ public class UserController {
                             responseCode = "404", description = "User not found with such username exception")
             }
     )
-    public String updateProfile(@RequestBody UserRequest request) {
+    public UserResponse updateProfile(@RequestBody UserRequest request) {
         return userService.updateProfile(request);
     }
 
@@ -137,7 +139,7 @@ public class UserController {
             responses = {
                     @ApiResponse(
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = ImageResponse.class)),
+                                    schema = @Schema(implementation = UserResponse.class)),
                             responseCode = "200", description = "Good"),
                     @ApiResponse(
                             content = @Content(mediaType = "application/json",
@@ -154,4 +156,21 @@ public class UserController {
         return userService.updateProfilePhoto(result);
     }
 
+    @GetMapping
+    @PreAuthorize("hasAnyAuthority('USER', 'USER_ACTIVE')")
+    @Operation(summary = "Update profile", description = "Updates user profile, user must be already saved via sign-up",
+            responses = {
+                    @ApiResponse(
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = UserResponse.class)),
+                            responseCode = "200", description = "Good"),
+                    @ApiResponse(
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ExceptionResponse.class)),
+                            responseCode = "404", description = "User not found with such username exception")
+            }
+    )
+    public UserResponse getProfile() {
+        return userService.getUserProfile();
+    }
 }

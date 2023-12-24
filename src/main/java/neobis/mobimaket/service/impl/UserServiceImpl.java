@@ -11,6 +11,7 @@ import neobis.mobimaket.entity.dto.request.UserRequest;
 import neobis.mobimaket.entity.dto.response.ImageResponse;
 import neobis.mobimaket.entity.dto.response.LikeResponse;
 import neobis.mobimaket.entity.dto.response.ProductShortResponse;
+import neobis.mobimaket.entity.dto.response.UserResponse;
 import neobis.mobimaket.entity.enums.Role;
 import neobis.mobimaket.entity.mapper.ImageMapper;
 import neobis.mobimaket.entity.mapper.ProductMapper;
@@ -43,10 +44,10 @@ public class UserServiceImpl implements UserService {
     ImageRepository imageRepository;
     SmsService smsService;
     @Override
-    public String updateProfile(UserRequest request) { // NotFound ex, Validation ex
+    public UserResponse updateProfile(UserRequest request) { // NotFound ex, Validation ex
         User user = getAuthUser();
         user.setUserInfo(UserMapper.mapUserRequestToUserInfo(request));
-        return "success";
+        return UserMapper.mapUserToUserResponse(user);
     }
 
     @Override
@@ -133,6 +134,11 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         return String.valueOf(token);
 //        return smsService.sendSms(request, String.valueOf(token));
+    }
+
+    @Override
+    public UserResponse getUserProfile() {
+        return UserMapper.mapUserToUserResponse(getAuthUser());
     }
 
     private User getUserByUsername(String username) {
