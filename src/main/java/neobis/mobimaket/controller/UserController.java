@@ -115,7 +115,7 @@ public class UserController {
             responses = {
                     @ApiResponse(
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = LikeResponse.class)),
+                                    schema = @Schema(implementation = UserResponse.class)),
                             responseCode = "200", description = "GOOD"),
                     @ApiResponse(
                             content = @Content(mediaType = "application/json",
@@ -133,11 +133,11 @@ public class UserController {
 
     @PostMapping(path = "/my-photo", consumes = "multipart/form-data")
     @PreAuthorize("hasAnyAuthority('USER', 'USER_ACTIVE')")
-    @Operation(summary = "Update profile", description = "Updates user profile, user must be already saved via sign-up",
+    @Operation(summary = "Update profile image", description = "Updates user profile image, user must be already saved via sign-up",
             responses = {
                     @ApiResponse(
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = UserResponse.class)),
+                                    schema = @Schema(implementation = ImageResponse.class)),
                             responseCode = "200", description = "Good"),
                     @ApiResponse(
                             content = @Content(mediaType = "application/json",
