@@ -2,6 +2,7 @@ package neobis.mobimaket.entity.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import neobis.mobimaket.entity.Image;
 
 @Data
 @Builder
@@ -13,4 +14,5 @@ public class ProductShortResponse {
     String name;
     Double price;
     Integer likes;
+    Image image;
 }
