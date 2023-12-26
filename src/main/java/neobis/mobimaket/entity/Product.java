@@ -12,7 +12,8 @@ import java.util.Set;
 @Table(name = "products")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Product {

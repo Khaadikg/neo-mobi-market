@@ -35,7 +35,7 @@ public class ProductController {
     ProductService productService;
     ObjectMapper mapper;
 
-    @RequestMapping(method = RequestMethod.POST, consumes = {"multipart/form-data"})
+    @PostMapping
     @PreAuthorize("hasAuthority('USER_ACTIVE')")
     @Operation(summary = "Save product", description = "For only fully filled user accounts",
             responses = {
@@ -119,7 +119,7 @@ public class ProductController {
 
     @DeleteMapping()
     @PreAuthorize("hasAnyAuthority('USER_ACTIVE')")
-    @Operation(summary = "Delete product", description = "Update product by id, For only fully filled user accounts",
+    @Operation(summary = "Delete product", description = "Delete product by id, For only fully filled user accounts",
             responses = {
                     @ApiResponse(
                             content = @Content(mediaType = "string"),

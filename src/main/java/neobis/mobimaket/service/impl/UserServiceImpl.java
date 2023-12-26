@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
         if (productRepository.findByIdAndIdOfLikedUser(id, user.getId()) != null) {
             product.setLikes(product.getLikes() - 1);
             user.getLikedProducts().remove(product);
-            productRepository.saveAll(user.getLikedProducts());
+            userRepository.save(user);
             return LikeResponse.builder()
                     .like_count(product.getLikes())
                     .type("DISLIKE")
@@ -94,7 +94,7 @@ public class UserServiceImpl implements UserService {
         }
         product.setLikes(product.getLikes() + 1);
         user.getLikedProducts().add(product);
-        productRepository.saveAll(user.getLikedProducts());
+        userRepository.save(user);
         return LikeResponse.builder()
                 .like_count(product.getLikes())
                 .type("LIKE")
